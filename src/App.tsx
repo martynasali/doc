@@ -1,58 +1,100 @@
 import React from 'react';
-import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import './App.css';
+import SideBar from "./app/components/Sidebar";
+import HomeIcon from '@mui/icons-material/Home';
+import NoteAddIcon from '@mui/icons-material/NoteAdd';
+import {OverridableComponent} from "@mui/material/OverridableComponent";
+import {SvgIconTypeMap} from "@mui/material/SvgIcon/SvgIcon";
+import Page from "./app/components/Page";
+
+export interface SidebarDataType {
+    SideItems: {
+        text: string,
+        logo: OverridableComponent<SvgIconTypeMap> & { muiName: string }
+    }[],
+    ListItems:{
+        text: string
+    }[]
+}
+
+interface LangState {id: number, lang: string, selected: boolean};
+
+
+
+export interface HeaderDataType{
+    lang:string[],
+    notifications:{
+        count:number,
+        text:string[]
+    },
+    image:string
+}
+
+let HeaderData:HeaderDataType = {
+    lang:['LT', 'GB', 'LV'],
+    notifications:{
+        count:1,
+        text:['you have a new message']
+    },
+    image:'https://mui.com/static/images/avatar/3.jpg'
+}
+
+let SidebarData:SidebarDataType = {
+    SideItems:
+    [
+        {text: 'Upload', logo: NoteAddIcon},
+        {text: 'Documents', logo: HomeIcon}
+    ],
+    ListItems:
+    [
+        {text: 'inbox'},
+        {text: 'Sent'},
+        {text: 'Drafts'}
+    ]
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <Counter />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <span>
-          <span>Learn </span>
-          <a
-            className="App-link"
-            href="https://reactjs.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux
-          </a>
-          <span>, </span>
-          <a
-            className="App-link"
-            href="https://redux-toolkit.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Redux Toolkit
-          </a>
-          ,<span> and </span>
-          <a
-            className="App-link"
-            href="https://react-redux.js.org/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            React Redux
-          </a>
-        </span>
-      </header>
-    </div>
+      <>
+        <Container/>
+      </>
   );
 }
+
+
+function Container() {
+  return (
+      <div className="Page">
+        <SideBar {...SidebarData}/>
+        <Page {...HeaderData}/>
+      </div>
+  );
+}
+
+
+// sidebar
+//    side items
+//      side item
+//      side item
+//    side list
+//      side list item
+//      side list item
+//      side list item
+
+
+
+
+// page
+//  sidebar
+//    side items
+//      side item
+//      side item
+//    side list
+//      side list item
+//      side list item
+//      side list item
+//  main page container
+//    main page block
+
 
 export default App;
