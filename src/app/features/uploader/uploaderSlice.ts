@@ -19,7 +19,6 @@ function validate(fname: string) {
     } else {
         let re = /(?:\.([^.]+))?$/;
         return String(re.exec(fname))
-
     }
 }
 
@@ -41,7 +40,7 @@ export const uploaderSlice = createSlice({
             })
             .addCase(handleSubmission.fulfilled, (state, action) => {
                 let id = Math.max(...state.map(s => s.id))
-                id = -Infinity ? 1 : id;
+                id = id == -Infinity ? 0 : id+1;
                 let name = action.payload[1][0].name.split('.')[0]
                 state.push({
                     type: action.payload[1][0].type,

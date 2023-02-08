@@ -65,7 +65,7 @@ function ViewUploadedFiles()
                         <FileDownloadOutlinedIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}}/>
                     </Stack>
                 </Stack>
-                {files.map(f=><BlankPage {...f} />)}
+                {files.map(f=>(f.id == show_it.id) ? <BlankPage {...f}/> : '')}
                 </AccordionDetails>
         </Accordion>
     )
@@ -75,7 +75,7 @@ export function BlankPage(file?:FileType)
 {
     return(
         <div className={'file-preview'}>
-            <img src={file? file.path : ''}/>
+            {file?.id}  <img src={file? file.path : ''}/>
         </div>
     )
 }

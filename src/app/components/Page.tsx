@@ -9,7 +9,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import Stack from "@mui/material/Stack";
 import SelectFilesBlock from "./SelectFilesBlock";
 import {uploaderState, deleteAll} from '../features/uploader/uploaderSlice';
-import {showEntry} from '../features/show/showSlice';
+import {show, showEntry} from '../features/show/showSlice';
 import {useAppDispatch, useAppSelector} from "../hooks";
 
 
@@ -63,7 +63,9 @@ function ListOfUploads() {
             <>
                 <p>List of uploads</p>
                 <FileBlock nameOfFile={{name:'martynas', id:1}}/>
-                {uploads.map(u => <FileBlock nameOfFile={{name:u.name, id:u.id}}/>)}
+                {uploads.map(u =>
+                    <FileBlock nameOfFile={{name:u.name, id:u.id}}/>
+                )}
                 <p onClick={() => dispatch(deleteAll())} className={'clear-all'}>Clear all</p>
             </>
         </CardBlock>
