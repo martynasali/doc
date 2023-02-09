@@ -152,6 +152,12 @@ h2{
   margin-top: 5px;
   align-items: center;
 }
+#pdf-controls{
+  display: none;
+}
+.image-renderer{
+  display: contents;
+}
 .file-block:hover{
   background-color: var(--light-pink);
 }

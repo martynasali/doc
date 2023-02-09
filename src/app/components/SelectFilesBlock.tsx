@@ -15,7 +15,7 @@ import {Uploader} from "../features/uploader/Uploader";
 import {useAppDispatch, useAppSelector} from "../hooks";
 import {show, showPage, toggleEntry, Type} from "../features/show/showSlice";
 import {uploaderState, FileType} from "../features/uploader/uploaderSlice";
-
+import DocViewer, { DocViewerRenderers } from "@cyntler/react-doc-viewer";
 
 export default function SelectFilesBlock() {
     return (
@@ -71,8 +71,19 @@ function ViewUploadedFiles() {
 export function BlankPage(file?: FileType) {
     return (
         <div className={'file-preview'}>
-            <img src={file ? file.path : ''}/>
+            <DocViewer   config={{
+                header: {
+                    disableHeader: true,
+                    disableFileName: true,
+                    retainURLParams: false,
+                },
+            }}
+
+                documents={[{ uri:file ? file.path : ''}]} pluginRenderers={DocViewerRenderers} />
+            {/*<img src={file ? file.path : ''}/>*/}
         </div>
+
+
     )
 }
 
