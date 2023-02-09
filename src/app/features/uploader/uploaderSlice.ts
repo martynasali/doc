@@ -5,12 +5,13 @@ export interface FileType {
     id: number;
     path: string;
     name: string;
-    status: 'ok' |'idle' | 'loading' | 'failed';
-    type: string|boolean;
+    status: 'ok' | 'idle' | 'loading' | 'failed';
+    type: string | boolean;
+    openPage: boolean;
 };
 
 
-const initialState: FileType[] = []
+export const initialState: FileType[] = []
 
 function validate(fname: string) {
     var re = /(\.jpg|\.jpeg|\.bmp|\.gif|\.png|\.pdf|)$/i;
@@ -23,6 +24,7 @@ function validate(fname: string) {
 }
 
 export const uploaderSlice = createSlice({
+
     name: 'uploader',
     // `createSlice` will infer the state type from the `initialState` argument
     initialState,
@@ -38,16 +40,17 @@ export const uploaderSlice = createSlice({
             .addCase(handleSubmission.pending, (state) => {
 
             })
-            .addCase(handleSubmission.fulfilled, (state, action) => {
+            .addCase(handleSubmission.fulfilled, (state: FileType[], action) => {
                 let id = Math.max(...state.map(s => s.id))
-                id = id == -Infinity ? 0 : id+1;
+                id = id == -Infinity ? 0 : id + 1;
                 let name = action.payload[1][0].name.split('.')[0]
                 state.push({
                     type: action.payload[1][0].type,
                     id: id,
                     name: name,
                     path: action.payload[0].fileUrl,
-                    status: 'ok'
+                    status: 'ok',
+                    openPage: false,
                 })
                 return state
             })

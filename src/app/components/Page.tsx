@@ -9,7 +9,7 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import Stack from "@mui/material/Stack";
 import SelectFilesBlock from "./SelectFilesBlock";
 import {uploaderState, deleteAll} from '../features/uploader/uploaderSlice';
-import {show, showEntry} from '../features/show/showSlice';
+import {setAfterUpload, show, showEntry} from '../features/show/showSlice';
 import {useAppDispatch, useAppSelector} from "../hooks";
 
 
@@ -58,11 +58,13 @@ const FileBlock = ({nameOfFile}: { nameOfFile: {name:string, id:number} }) => {
 function ListOfUploads() {
     const uploads = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
+    let lastitem = uploads.at(-1)
+    var tyu = uploads;
+    // useAppDispatch(setAfterUpload());
     return (
         <CardBlock>
             <>
                 <p>List of uploads</p>
-                <FileBlock nameOfFile={{name:'martynas', id:1}}/>
                 {uploads.map(u =>
                     <FileBlock nameOfFile={{name:u.name, id:u.id}}/>
                 )}

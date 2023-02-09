@@ -11,16 +11,13 @@ import Stack from "@mui/material/Stack";
 import PreviewIcon from '@mui/icons-material/Preview';
 import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import Document from './Document'
-import { Uploader } from "../features/uploader/Uploader";
+import {Uploader} from "../features/uploader/Uploader";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {show, toggleEntry} from "../features/show/showSlice";
+import {show, showPage, toggleEntry, Type} from "../features/show/showSlice";
 import {uploaderState, FileType} from "../features/uploader/uploaderSlice";
 
 
-
 export default function SelectFilesBlock() {
-
-
     return (
         <div className={'SelectFilesBlock'}>
             <div>
@@ -42,14 +39,13 @@ export default function SelectFilesBlock() {
     )
 }
 
-function ViewUploadedFiles()
-{
+function ViewUploadedFiles() {
     const show_it = useAppSelector(show);
     const files = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
 
-    return(
-        <Accordion onClick={()=>dispatch(toggleEntry())} expanded={!!show_it.show } className="preview-block">
+    return (
+        <Accordion onClick={() => dispatch(toggleEntry())} expanded={!!show_it.show} className="preview-block">
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel2a-content"
@@ -60,34 +56,35 @@ function ViewUploadedFiles()
             <AccordionDetails>
                 <Stack direction="row" justifyContent="center" alignItems="center">
                     <FileName/>
-                    <Stack direction="row" sx={{ marginLeft: 'auto'}} alignItems="flex-end" spacing={1}>
+                    <Stack direction="row" sx={{marginLeft: 'auto'}} alignItems="flex-end" spacing={1}>
+
                         <Document><FileName/></Document>
                         <FileDownloadOutlinedIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}}/>
                     </Stack>
                 </Stack>
-                {files.map(f=>(f.id == show_it.id) ? <BlankPage {...f}/> : '')}
-                </AccordionDetails>
+                {files.map(f => (f.id == show_it.id) ? <BlankPage {...f}/> : '')}
+            </AccordionDetails>
         </Accordion>
     )
 }
 
-export function BlankPage(file?:FileType)
-{
-    return(
+export function BlankPage(file?: FileType) {
+    return (
         <div className={'file-preview'}>
-            {file?.id}  <img src={file? file.path : ''}/>
+            <img src={file ? file.path : ''}/>
         </div>
     )
 }
-export function FileName()
-{
-    return(
+
+export function FileName() {
+    return (
         <>
-        <Stack  sx={{ marginLeft: 'auto'}} direction="row" justifyContent="center" alignItems="center" spacing={3}>
-            <ArrowBackIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
-            <p className={'file-name'}>Name of the file.pdf</p>
-            <ArrowForwardIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
-        </Stack>
+            <Stack sx={{marginLeft: 'auto'}} direction="row" justifyContent="center" alignItems="center" spacing={3}>
+                <ArrowBackIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
+                <p className={'file-name'}>Name of the file.pdf</p>
+                <ArrowForwardIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
+            </Stack>
+
         </>
     )
 }
