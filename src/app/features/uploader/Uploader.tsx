@@ -3,6 +3,7 @@ import {useAppSelector, useAppDispatch} from '../../hooks';
 import {addFile, uploaderState, handleSubmission} from './uploaderSlice';
 import {useDropzone, DropzoneProps} from 'react-dropzone';
 import image from "../../../image.png";
+import {setAfterUpload} from "../show/showSlice";
 
 
 interface dropZoneProps extends DropzoneProps {

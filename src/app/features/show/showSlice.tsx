@@ -7,11 +7,11 @@ export interface Type {
     openPage?:boolean;
     openDocument?:boolean;
     uploadFiles?:boolean;
+    fileType?: 'pdf' | 'other';
 };
 
-const initialState:Type = {}
 
-const obj = {}
+const initialState:Type = {fileType: 'pdf'}
 
 export const showSlice = createSlice({
     name: 'show',
@@ -22,25 +22,30 @@ export const showSlice = createSlice({
             return state
         },
         showEntry: (state, action) => {
-            state = {id:action.payload, show:true}
+            state = {...state, id:action.payload.id, show:true, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other' }
             return state
         },
         showPage: (state, action) => {
-            state = {id:action.payload === undefined ? 1 : action.payload , show:false, openPage:true}
+            state = {...state, id:action.payload === undefined ? 1 : action.payload , show:false, openPage:true}
             return state
         },
         closePage: (state, action) => {
-            state = {id:action.payload, show:false, openPage:false}
+            state = {...state, id:action.payload, show:false, openPage:false}
             return state
         },
-        setAfterUpload: (state, action) => {
-            state = {id:action.payload, show:false, openPage:false}
+        setAfterUpload: (state) => {
+            state = {...state, show: true}
             return state
         },
+        setFileType: (state, action) =>{
+            state = {...state, fileType:action.payload, openDocument: true}
+            return state
+        }
     }
+
 });
 
-export const {showEntry, toggleEntry, showPage, closePage, setAfterUpload} = showSlice.actions;
+export const {showEntry, toggleEntry, showPage, closePage, setAfterUpload, setFileType} = showSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const show = (state: RootState) => state.show;

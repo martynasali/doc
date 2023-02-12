@@ -8,7 +8,7 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import Stack from '@mui/material/Stack';
 
 
-export default function Header(HeaderData:HeaderDataType) {
+export default function Header(HeaderData: HeaderDataType) {
     return (
         <div className='header'>
             <Stack
@@ -17,26 +17,26 @@ export default function Header(HeaderData:HeaderDataType) {
                 direction="row"
                 justifyContent="flex-end"
                 alignItems="center"
-                sx={{ color: 'action.active' }}
+                sx={{color: 'action.active'}}
             >
-            <LanguageMenu lang={HeaderData.lang}/>
-            <Notifications {...HeaderData.notifications}/>
-            <AvatarWithMenu image={HeaderData.image}/>
+                <LanguageMenu lang={HeaderData.lang}/>
+                <Notifications {...HeaderData.notifications}/>
+                <AvatarWithMenu image={HeaderData.image}/>
             </Stack>
         </div>
     );
 }
 
 
-function Notifications(info:{count: number, text: string[]}){
-    return(
+function Notifications(info: { count: number, text: string[] }) {
+    return (
         <Badge color="error" badgeContent={info.count}>
             <NotificationsIcon fontSize="large"/>
         </Badge>
     )
 }
 
-function AvatarWithMenu(image:{image:string}) {
+function AvatarWithMenu(image: { image: string }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -56,7 +56,7 @@ function AvatarWithMenu(image:{image:string}) {
                 aria-haspopup="true"
                 aria-expanded={open ? 'true' : undefined}
                 onClick={handleClick}
-                >
+            >
             </Avatar>
             <Menu
                 id="demo-positioned-menu"
@@ -81,7 +81,7 @@ function AvatarWithMenu(image:{image:string}) {
     );
 }
 
-function LanguageMenu(lang:{lang:string[]}) {
+function LanguageMenu(lang: { lang: string[] }) {
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
     const [language, setLanguage] = useState('EN')
@@ -89,9 +89,8 @@ function LanguageMenu(lang:{lang:string[]}) {
 
         setAnchorEl(event.currentTarget);
     };
-    const handleClose = (l:string) => {
-        if(typeof l === 'string')
-        {
+    const handleClose = (l: string) => {
+        if (typeof l === 'string') {
             setLanguage(l)
         }
         setAnchorEl(null);
@@ -124,7 +123,7 @@ function LanguageMenu(lang:{lang:string[]}) {
                     horizontal: 'center',
                 }}
             >
-                {lang.lang.map((l)=>(<MenuItem key={l} onClick={()=>(handleClose(l ? l : 'EN'))}>{l}</MenuItem>))}
+                {lang.lang.map((l) => (<MenuItem key={l} onClick={() => (handleClose(l ? l : 'EN'))}>{l}</MenuItem>))}
             </Menu>
         </div>
     );

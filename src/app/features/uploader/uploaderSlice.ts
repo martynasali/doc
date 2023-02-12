@@ -8,22 +8,12 @@ export interface FileType {
     path: string;
     name: string;
     status: 'ok' | 'idle' | 'loading' | 'failed';
-    type: string | boolean;
+    type: string;
     openPage: boolean;
 };
 
 
 export const initialState: FileType[] = []
-
-function validate(fname: string) {
-    var re = /(\.jpg|\.jpeg|\.bmp|\.gif|\.png|\.pdf|)$/i;
-    if (!re.exec(fname)) {
-        return false
-    } else {
-        let re = /(?:\.([^.]+))?$/;
-        return String(re.exec(fname))
-    }
-}
 
 export const uploaderSlice = createSlice({
 
@@ -47,7 +37,7 @@ export const uploaderSlice = createSlice({
                 id = id == -Infinity ? 0 : id + 1;
                 let name = action.payload[1][0].name.split('.')[0]
                 state.push({
-                    type: action.payload[1][0].type,
+                    type: action.payload[2],
                     id: id,
                     name: name,
                     path: action.payload[0].fileUrl,
@@ -62,19 +52,23 @@ export const uploaderSlice = createSlice({
     },
 });
 
-function fileExtension(filename:FileWithPath) {
+function fileExtension(filename: FileWithPath) {
+    let supportedFiles = ["pdf", "png", "jpg", "jpeg", 'pdf', 'csv', 'doc'];
     let ext = (/[^./\\]*$/.exec(filename.path!) || [""])[0];
-    return ext.toLowerCase();
+    ext = ext.toLowerCase();
+    if (supportedFiles.includes(ext)) {
+        return ext
+    } else {
+        return false
+    }
 };
 
 export const handleSubmission: any = createAsyncThunk(
     'uploader/handleSubmission',
     async (selectedFile: FileWithPath[]) => {
-        let fileType = fileExtension(selectedFile[0])
-        if(fileType)
-        {
-            Promise.reject(new Error('fail'))
-            return false
+        let ext = fileExtension(selectedFile[0])
+        if (!ext) {
+            throw new Error("File type is not supported");
         }
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
@@ -91,7 +85,7 @@ export const handleSubmission: any = createAsyncThunk(
             })
             .then((result) => {
                 console.log('Success:', result.files[0].fileUrl);
-                return [result.files[0], selectedFile]
+                return [result.files[0], selectedFile, ext]
             })
             .catch((error) => {
                 console.error('Error:', error);

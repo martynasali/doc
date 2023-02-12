@@ -1,17 +1,16 @@
-import React, {FunctionComponent} from "react";
+import React from "react";
 import {HeaderDataType} from "../../App";
 import Header from "./Header";
-import {FormControlLabel, Paper, Radio, RadioGroup, Select} from "@mui/material";
-import image from "../../image.png";
+import {Radio, Select} from "@mui/material";
 import MenuItem from "@mui/material/MenuItem";
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Stack from "@mui/material/Stack";
 import SelectFilesBlock from "./SelectFilesBlock";
 import {uploaderState, deleteAll} from '../features/uploader/uploaderSlice';
-import {setAfterUpload, show, showEntry} from '../features/show/showSlice';
+import {show, showEntry, setFileType, setAfterUpload} from '../features/show/showSlice';
 import {useAppDispatch, useAppSelector} from "../hooks";
-
+import AlertDialog from "./Alert";
 
 export default function Page(HeaderData: HeaderDataType) {
 
@@ -36,11 +35,12 @@ export default function Page(HeaderData: HeaderDataType) {
 }
 
 
-const FileBlock = ({nameOfFile}: { nameOfFile: {name:string, id:number} }) => {
+const FileBlock = ({nameOfFile}: { nameOfFile: { name: string, id: number, fileType: string } }) => {
     const show = useAppSelector(showEntry);
     const dispatch = useAppDispatch();
     return (
-        <div onClick={() => dispatch(showEntry(nameOfFile.id))} className={'file-block-row'}>
+        <div onClick={() => dispatch(showEntry({id: nameOfFile.id, fileType: nameOfFile.fileType}))}
+             className={'file-block-row'}>
             <div className={'file-block'}>
                 {nameOfFile.name}
                 <div className={'file-icons'}>
@@ -58,17 +58,14 @@ const FileBlock = ({nameOfFile}: { nameOfFile: {name:string, id:number} }) => {
 function ListOfUploads() {
     const uploads = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
-    let lastitem = uploads.at(-1)
-    var tyu = uploads;
-    // useAppDispatch(setAfterUpload());
     return (
         <CardBlock>
             <>
                 <p>List of uploads</p>
                 {uploads.map(u =>
-                    <FileBlock nameOfFile={{name:u.name, id:u.id}}/>
+                    <FileBlock key={'fb' + u.id} nameOfFile={{name: u.name, id: u.id, fileType: u.type}}/>
                 )}
-                <p onClick={() => dispatch(deleteAll())} className={'clear-all'}>Clear all</p>
+                <AlertDialog/>
             </>
         </CardBlock>
 
@@ -76,11 +73,8 @@ function ListOfUploads() {
 }
 
 function TypeOfDocument() {
-    const [selectedValue, setSelectedValue] = React.useState('pdf');
-
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        setSelectedValue(event.target.value);
-    };
+    const showState = useAppSelector(show);
+    const dispatch = useAppDispatch();
     return (
         <CardBlock>
             <>
@@ -88,16 +82,16 @@ function TypeOfDocument() {
                 <div className={'select-radio-block'}>
                     <div className={'radio-buttons'}>
                         <Radio
-                            checked={selectedValue === 'pdf'}
-                            onChange={handleChange}
+                            checked={showState.fileType === 'pdf'}
+                            onChange={() => dispatch(setFileType('pdf'))}
                             value="pdf"
                             color="secondary"
                             name="radio-buttons"
                             inputProps={{'aria-label': 'A'}}
                         />
                         <Radio
-                            checked={selectedValue === 'other'}
-                            onChange={handleChange}
+                            checked={showState.fileType === 'other'}
+                            onChange={() => dispatch(setFileType('other'))}
                             value="other"
                             color="secondary"
                             name="radio-buttons"
@@ -107,7 +101,7 @@ function TypeOfDocument() {
 
                     <div className={'select-elements'}>
                         <Select
-                            disabled={selectedValue !== 'pdf' ? true : false}
+                            disabled={showState.fileType !== 'pdf' ? true : false}
                             variant="outlined"
                             sx={{
                                 boxShadow: '3px 3px 6px 0px rgba(194,194,194,1)',
@@ -127,7 +121,7 @@ function TypeOfDocument() {
                         </Select>
 
                         <Select
-                            disabled={selectedValue !== 'other' ? true : false}
+                            disabled={showState.fileType !== 'other' ? true : false}
                             variant="outlined"
                             sx={{
                                 boxShadow: '3px 3px 6px 0px rgba(194,194,194,1)',
@@ -146,9 +140,6 @@ function TypeOfDocument() {
                             value={'Other formats'}
                         >
                             <MenuItem value={'Other formats'}>Other formats</MenuItem>
-                            <MenuItem value={"epub"}>epub</MenuItem>
-                            <MenuItem value={"doc"}>doc</MenuItem>
-                            <MenuItem value={"jpg"}>jpg</MenuItem>
                         </Select>
                     </div>
                 </div>
