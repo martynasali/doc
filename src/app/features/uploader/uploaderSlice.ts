@@ -1,5 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {RootState} from '../../store';
+import {FileWithPath} from 'react-dropzone';
+
 
 export interface FileType {
     id: number;
@@ -37,7 +39,7 @@ export const uploaderSlice = createSlice({
         },
     }, extraReducers: (builder) => {
         builder
-            .addCase(handleSubmission.pending, (state) => {
+            .addCase(handleSubmission.pending, (state: FileType[]) => {
 
             })
             .addCase(handleSubmission.fulfilled, (state: FileType[], action) => {
@@ -60,12 +62,20 @@ export const uploaderSlice = createSlice({
     },
 });
 
+function fileExtension(filename:FileWithPath) {
+    let ext = (/[^./\\]*$/.exec(filename.path!) || [""])[0];
+    return ext.toLowerCase();
+};
+
 export const handleSubmission: any = createAsyncThunk(
     'uploader/handleSubmission',
-    async (selectedFile: File[]) => {
-        // if(!validate(String(selectedFile[0].path))){
-        //     return false
-        // }
+    async (selectedFile: FileWithPath[]) => {
+        let fileType = fileExtension(selectedFile[0])
+        if(fileType)
+        {
+            Promise.reject(new Error('fail'))
+            return false
+        }
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
         const response = await fetch(
