@@ -20,23 +20,29 @@ export interface State {
         openPage?:boolean;
         openDocument?:boolean;
         uploadFiles?:boolean;
+        backdrop:boolean;
         fileType?: 'pdf' | 'other';
     },
     files:File[];
 }
 
-export const initialState: State = {ui:{fileType: 'pdf' }, files:[]};
+export const initialState: State = {ui:{fileType: 'pdf', uploader:true, preview:false, backdrop:false}, files:[]};
 
 export const uploaderSlice = createSlice({
 
     name: 'uploader',
     initialState,
     reducers: {
+        uploadState: (state) => {
+            state.ui = {...state.ui, backdrop:true}
+            return state
+        },
         addFile: (state, action) => {
-
+            state.ui = {...state.ui, backdrop:true}
+            return state
         },
         deleteAll: (state) => {
-            return{ui:{}, files:[]};
+            return{ui:{...initialState.ui}, files:[]};
         },
         toggleUploader:(state) =>{
             state.ui.uploader = !state.ui.uploader;
@@ -47,29 +53,30 @@ export const uploaderSlice = createSlice({
             return state
         },
         showEntry: (state, action) => {
-            state.ui = {...state.ui, id:action.payload.id, preview:true, uploader:false, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other' }
+            state.ui = {...state.ui, id:action.payload.id, preview:true, backdrop:false, uploader:false, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other' }
             return state
         },
         showPage: (state, action) => {
-            state.ui = {...state, id:action.payload === undefined ? 1 : action.payload , uploader:false, openPage:true}
+            state.ui = {...state.ui, backdrop:false, id:action.payload === undefined ? 1 : action.payload , uploader:false, openPage:true}
             return state
         },
         closePage: (state, action) => {
-            state.ui = {...state, id:action.payload, uploader:false, openPage:false}
+            state.ui = {...state.ui, id:action.payload, uploader:false, openPage:false}
             return state
         },
         setAfterUpload: (state) => {
-            state.ui = {...state, uploader: true}
+            state.ui = {...state.ui, uploader: true}
             return state
         },
         setFileType: (state, action) =>{
-            state.ui = {...state, fileType:action.payload, openDocument: true}
+            state.ui = {...state.ui, fileType:action.payload, openDocument: true}
             return state
         },
     }, extraReducers: (builder) => {
         builder
-            .addCase(handleSubmission.pending, (state: State) => {
-
+            .addCase(handleSubmission.pending, (state:State) => {
+                state.ui = {...state.ui, backdrop:true}
+                return state
             })
             .addCase(handleSubmission.fulfilled, (state: State, action) => {
                 let id = Math.max(...state.files.map(s => s.id))
@@ -83,7 +90,7 @@ export const uploaderSlice = createSlice({
                     status: 'ok',
                     openPage: false,
                 })
-                // state.ui = {...state.ui, uploader:false, preview:true}
+                state.ui = {...state.ui, id:id, uploader:false, preview:true, backdrop:false}
                 return state
             })
             .addCase(handleSubmission.rejected, (state) => {
@@ -134,7 +141,7 @@ export const handleSubmission: any = createAsyncThunk(
     })
 
 
-export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, setAfterUpload, setFileType} = uploaderSlice.actions;
+export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, setAfterUpload, uploadState, setFileType} = uploaderSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const uploaderState = (state: RootState) => state.uploader;

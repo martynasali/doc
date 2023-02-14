@@ -1,6 +1,6 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import {useAppSelector, useAppDispatch} from '../../hooks';
-import {addFile, uploaderState, handleSubmission} from './uploaderSlice';
+import {addFile, uploaderState, uploadState, handleSubmission} from './uploaderSlice';
 import {useDropzone, DropzoneProps} from 'react-dropzone';
 import image from "../../../image.png";
 
@@ -11,9 +11,9 @@ interface dropZoneProps extends DropzoneProps {
 }
 
 export function Uploader(props: dropZoneProps) {
-    const uploads = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
     const onDrop = (acceptedFiles: File[]) => {
+        dispatch(uploadState());
         dispatch(addFile(acceptedFiles))
         dispatch(handleSubmission([...acceptedFiles]))
     }

@@ -38,7 +38,7 @@ function DialogBlock(sh: File, {children}: { children: JSX.Element | JSX.Element
                 aria-describedby="scroll-dialog-description"
             >
                 <DialogTitle id="scroll-dialog-title">
-                    <FileName/>
+                    <FileName {...sh}/>
                     {children}
                 </DialogTitle>
                 <DialogContent dividers={true}>
