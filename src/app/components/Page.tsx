@@ -7,8 +7,7 @@ import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import Stack from "@mui/material/Stack";
 import SelectFilesBlock from "./SelectFilesBlock";
-import {uploaderState, deleteAll} from '../features/uploader/uploaderSlice';
-import {show, showEntry, setFileType, setAfterUpload} from '../features/show/showSlice';
+import {uploaderState, deleteAll, showEntry, setFileType,} from '../features/uploader/uploaderSlice';
 import {useAppDispatch, useAppSelector} from "../hooks";
 import AlertDialog from "./Alert";
 
@@ -36,7 +35,7 @@ export default function Page(HeaderData: HeaderDataType) {
 
 
 const FileBlock = ({nameOfFile}: { nameOfFile: { name: string, id: number, fileType: string } }) => {
-    const show = useAppSelector(showEntry);
+    const show = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
     return (
         <div onClick={() => dispatch(showEntry({id: nameOfFile.id, fileType: nameOfFile.fileType}))}
@@ -62,7 +61,7 @@ function ListOfUploads() {
         <CardBlock>
             <>
                 <p>List of uploads</p>
-                {uploads.map(u =>
+                {uploads.files.map(u =>
                     <FileBlock key={'fb' + u.id} nameOfFile={{name: u.name, id: u.id, fileType: u.type}}/>
                 )}
                 <AlertDialog/>
@@ -73,7 +72,7 @@ function ListOfUploads() {
 }
 
 function TypeOfDocument() {
-    const showState = useAppSelector(show);
+    const showState = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
     return (
         <CardBlock>
@@ -82,7 +81,7 @@ function TypeOfDocument() {
                 <div className={'select-radio-block'}>
                     <div className={'radio-buttons'}>
                         <Radio
-                            checked={showState.fileType === 'pdf'}
+                            checked={showState.ui.fileType === 'pdf'}
                             onChange={() => dispatch(setFileType('pdf'))}
                             value="pdf"
                             color="secondary"
@@ -90,7 +89,7 @@ function TypeOfDocument() {
                             inputProps={{'aria-label': 'A'}}
                         />
                         <Radio
-                            checked={showState.fileType === 'other'}
+                            checked={showState.ui.fileType === 'other'}
                             onChange={() => dispatch(setFileType('other'))}
                             value="other"
                             color="secondary"
@@ -101,7 +100,7 @@ function TypeOfDocument() {
 
                     <div className={'select-elements'}>
                         <Select
-                            disabled={showState.fileType !== 'pdf' ? true : false}
+                            disabled={showState.ui.fileType !== 'pdf' ? true : false}
                             variant="outlined"
                             sx={{
                                 boxShadow: '3px 3px 6px 0px rgba(194,194,194,1)',
@@ -121,7 +120,7 @@ function TypeOfDocument() {
                         </Select>
 
                         <Select
-                            disabled={showState.fileType !== 'other' ? true : false}
+                            disabled={showState.ui.fileType !== 'other' ? true : false}
                             variant="outlined"
                             sx={{
                                 boxShadow: '3px 3px 6px 0px rgba(194,194,194,1)',

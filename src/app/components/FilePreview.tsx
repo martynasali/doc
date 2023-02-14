@@ -2,10 +2,10 @@ import React, { useState } from "react";
 import { Document, Page } from 'react-pdf/dist/esm/entry.webpack5'
 import 'react-pdf/dist/esm/Page/AnnotationLayer.css';
 import 'react-pdf/dist/esm/Page/TextLayer.css';
-import {FileType} from "../features/uploader/uploaderSlice";
+import {File, State} from "../features/uploader/uploaderSlice";
 
 
-export default function FilePreview(file: FileType) {
+export default function FilePreview(file: File) {
     const [numPages, setNumPages] = useState(null);
 
     function onDocumentLoadSuccess( {numPages}:any) {

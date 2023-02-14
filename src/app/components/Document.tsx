@@ -6,31 +6,29 @@ import DialogTitle from '@mui/material/DialogTitle';
 import PreviewIcon from "@mui/icons-material/Preview";
 import {FileName, PreviewPage} from './SelectFilesBlock'
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {uploaderState, FileType} from "../features/uploader/uploaderSlice";
-import {show, showPage, closePage,} from "../features/show/showSlice";
+import {uploaderState, State, File, showPage, closePage,} from "../features/uploader/uploaderSlice";
 
 export default function ScrollDialog({children}: { children: JSX.Element | JSX.Element[] }) {
-    const showState: FileType[] = useAppSelector(uploaderState);
-    const show_it = useAppSelector(show);
+    const showState: State = useAppSelector(uploaderState);
+    const show_it = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
 
     return (<>
-        {showState.map((sh: FileType) => sh.id == show_it.id ?
+        {showState.files.map((sh: File) => sh.id == show_it.ui.id ?
             <><PreviewIcon key={'pi' + sh.id} onClick={() => dispatch(showPage(sh.id))}
                            sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}}/>
                 <DialogBlock key={'db' + sh.id} {...sh}></DialogBlock></> : '')}
     </>)
 }
 
-function DialogBlock(sh: FileType, {children}: { children: JSX.Element | JSX.Element[] }) {
+function DialogBlock(sh: File, {children}: { children: JSX.Element | JSX.Element[] }) {
     const dispatch = useAppDispatch();
-    const show_it = useAppSelector(show);
-    const descriptionElementRef = React.useRef<HTMLElement>(null);
+    const show_it = useAppSelector(uploaderState);
     return (
         <>
             <Dialog
-                open={show_it.openPage!}
-                onClose={() => dispatch(closePage(show_it.id))}
+                open={show_it.ui.openPage!}
+                onClose={() => dispatch(closePage(show_it.ui.id))}
                 scroll={'paper'}
                 sx={{
                     '& .MuiPaper-root': {borderRadius: '36px', width: 1},
@@ -46,7 +44,6 @@ function DialogBlock(sh: FileType, {children}: { children: JSX.Element | JSX.Ele
                 <DialogContent dividers={true}>
                     <DialogContentText
                         id="scroll-dialog-description"
-                        ref={descriptionElementRef}
                         tabIndex={-1}
                     >
                         <PreviewPage {...sh}/>

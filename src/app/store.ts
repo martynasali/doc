@@ -1,11 +1,9 @@
 import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
 import uploaderReducer from "./features/uploader/uploaderSlice";
-import showSliceReducer from "./features/show/showSlice";
 
 export const store = configureStore({
   reducer: {
     uploader: uploaderReducer,
-    show: showSliceReducer
   },
 });
 

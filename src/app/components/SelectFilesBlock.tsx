@@ -10,20 +10,20 @@ import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
 import Document from './Document'
 import {Uploader} from "../features/uploader/Uploader";
 import {useAppDispatch, useAppSelector} from "../hooks";
-import {show, toggleEntry} from "../features/show/showSlice";
-import {uploaderState, FileType} from "../features/uploader/uploaderSlice";
+import {uploaderState, State, File, toggleUploader, togglePreview} from "../features/uploader/uploaderSlice";
 import DocViewer, {DocViewerRenderers} from "@cyntler/react-doc-viewer";
 import FilePreview from "./FilePreview";
 
 export default function SelectFilesBlock() {
-    const show_it = useAppSelector(show);
+    const show_it = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
     return (
         <div className={'SelectFilesBlock'}>
             {/*<FilePreview/>*/}
             <div>
-                <Accordion elevation={3} onClick={() => dispatch(toggleEntry())} expanded={!show_it.show}>
+                <Accordion elevation={3} expanded={show_it.ui.uploader}>
                     <AccordionSummary
+                        onClick={() => dispatch(toggleUploader())}
                         expandIcon={<ExpandMoreIcon/>}
                         aria-controls="panel1a-content"
                         id="panel1a-header"
@@ -41,12 +41,10 @@ export default function SelectFilesBlock() {
 }
 
 function ViewUploadedFiles() {
-    const show_it = useAppSelector(show);
-    const files = useAppSelector(uploaderState);
+    const uploads = useAppSelector(uploaderState);
     const dispatch = useAppDispatch();
-
     return (
-        <Accordion onClick={() => dispatch(toggleEntry())} expanded={show_it.show} className="preview-block">
+        <Accordion onClick={() => dispatch(togglePreview())} expanded={uploads.ui.preview} className="preview-block">
             <AccordionSummary
                 expandIcon={<ExpandMoreIcon/>}
                 aria-controls="panel2a-content"
@@ -63,13 +61,13 @@ function ViewUploadedFiles() {
                         <FileDownloadOutlinedIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}}/>
                     </Stack>
                 </Stack>
-                {files.map(f => (f.id == show_it.id) ? <BlankPage key={'bp' + f.id} {...f}/> : '')}
+                {uploads.files.map(f => (f.id == uploads.ui.id) ? <BlankPage key={'bp' + f.id} {...f}/> : '')}
             </AccordionDetails>
         </Accordion>
-    )
+    );
 }
 
-export function PreviewPage(file?: FileType) {
+export function PreviewPage(file?: File) {
     if (file?.type !== 'pdf') {
         return (
             <div className={'file-preview'}>
@@ -92,7 +90,7 @@ export function PreviewPage(file?: FileType) {
     }
 }
 
-export function BlankPage(file?: FileType) {
+export function BlankPage(file?: File) {
     return (
         <div className={'file-preview'}>
             <DocViewer config={{

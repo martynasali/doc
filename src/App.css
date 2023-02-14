@@ -289,12 +289,14 @@ h2{
   margin-top: 15px;
   border-radius: 10px;
 }
+.kuvloU{
+  background-image: none!important;
+}
 @media screen and (max-width:1024px) {
   .Sidebar{
     display: none;
   }
 }
-
 @media screen and (max-width:568px) {
   .left-colum{
     width: 100%
