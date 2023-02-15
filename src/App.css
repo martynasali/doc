@@ -153,6 +153,9 @@ h2{
   align-items: center;
   word-break: break-all;
 }
+.file-block > span {
+  padding: 4px 0px;
+}
 #pdf-controls{
   display: none;
 }
@@ -293,6 +296,12 @@ h2{
 .kuvloU{
   background-image: none!important;
 }
+.my-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 @media screen and (max-width:1024px) {
   .Sidebar{
     display: none;

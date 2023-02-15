@@ -1,6 +1,7 @@
 import {createAsyncThunk, createSlice, PayloadAction} from '@reduxjs/toolkit';
 import type {RootState} from '../../store';
 import {FileWithPath} from 'react-dropzone';
+import axios from "axios";
 
 
 export interface File {
@@ -64,10 +65,6 @@ export const uploaderSlice = createSlice({
             state.ui = {...state.ui, id:action.payload, uploader:false, openPage:false}
             return state
         },
-        setAfterUpload: (state) => {
-            state.ui = {...state.ui, uploader: true}
-            return state
-        },
         setFileType: (state, action) =>{
             state.ui = {...state.ui, fileType:action.payload, openDocument: true}
             return state
@@ -90,7 +87,7 @@ export const uploaderSlice = createSlice({
                     status: 'ok',
                     openPage: false,
                 })
-                state.ui = {...state.ui, id:id, uploader:false, preview:true, backdrop:false}
+                state.ui = {...state.ui, id:id, uploader:false, preview:true, backdrop:false, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other'}
                 return state
             })
             .addCase(handleSubmission.rejected, (state) => {
@@ -119,29 +116,21 @@ export const handleSubmission: any = createAsyncThunk(
         }
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
-        const response = await fetch(
-            'https://api.upload.io/v2/accounts/12a1xxQ/uploads/form_data',
-            {
-                method: 'POST',
-                body: formData,
-                headers: new Headers({'Authorization': 'Bearer public_12a1xxQCS3oNdGZacNSUy1igmHNE'})
-            }
-        )
-            .then((response) => {
-                return response.json()
+        const headers = { 'Authorization': 'Bearer public_12a1xxQCS3oNdGZacNSUy1igmHNE' };
+
+        const response = await axios.post('https://api.upload.io/v2/accounts/12a1xxQ/uploads/form_data', formData, { headers })
+            .then(response => {
+                console.log('Success:', response.data.files[0].fileUrl);
+                return [response.data.files[0], selectedFile, ext];
             })
-            .then((result) => {
-                console.log('Success:', result.files[0].fileUrl);
-                return [result.files[0], selectedFile, ext]
-            })
-            .catch((error) => {
+            .catch(error => {
                 console.error('Error:', error);
             });
         return response
     })
 
 
-export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, setAfterUpload, uploadState, setFileType} = uploaderSlice.actions;
+export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, uploadState, setFileType} = uploaderSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const uploaderState = (state: RootState) => state.uploader;

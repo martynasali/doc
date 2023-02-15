@@ -41,7 +41,7 @@ const FileBlock = ({nameOfFile}: { nameOfFile: { name: string, id: number, fileT
         <div onClick={() => dispatch(showEntry({id: nameOfFile.id, fileType: nameOfFile.fileType}))}
              className={'file-block-row'}>
             <div className={'file-block'}>
-                {nameOfFile.name}
+                <span>{nameOfFile.name}.{nameOfFile.fileType}</span>
                 <div className={'file-icons'}>
                     <Stack direction="row" spacing={1}>
                         <EditOutlinedIcon sx={{color: 'rgb(109, 123, 135)'}}/>

@@ -119,7 +119,7 @@ export function FileName(file?: File) {
         <>
             <Stack sx={{marginLeft: 'auto'}} direction="row" justifyContent="center" alignItems="center" spacing={3}>
                 <ArrowBackIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
-                <p className={'file-name'}>{file?.name}</p>
+                <p className={'file-name'}>{file?.name}.{file?.type}</p>
                 <ArrowForwardIosIcon sx={{fontSize: 15, color: 'rgb(100, 115, 128)'}} fontSize="small"/>
             </Stack>
 
