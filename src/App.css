@@ -293,7 +293,7 @@ h2{
   margin-top: 15px;
   border-radius: 10px;
 }
-.kuvloU{
+.idrHtA{
   background-image: none!important;
 }
 .my-text {
@@ -324,30 +324,3 @@ h2{
     width: 100%;
   }
 }
-
-
-
-/*Scroll bar*/
-/*::-webkit-scrollbar {*/
-/*  width: 10px;*/
-/*  background-color: #F5F5F5;*/
-/*}*/
-/*::-webkit-scrollbar-thumb {*/
-/*  border-radius: 5px;*/
-/*  width: 5px;*/
-/*  background: var(--text-gray);*/
-/*  !*box-shadow: inset 0 0 1px 1px #5C6670;*!*/
-/*}*/
-
-/*::-webkit-scrollbar-track {*/
-/*  border-radius: 10px;*/
-/*  background: white;*/
-/*  width: 10px;*/
-/*  border: 1px solid var(--text-light-gray);*/
-/*}*/
-
-/*::-webkit-scrollbar-thumb:hover {*/
-/*  background: linear-gradient(left, #8391A6, #536175);*/
-/*}*/
-
-/*End scroll bar*/
