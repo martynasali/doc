@@ -23,11 +23,12 @@ export interface State {
         uploadFiles?:boolean;
         backdrop:boolean;
         fileType?: 'pdf' | 'other';
+        uploadProgress?:number;
     },
     files:File[];
 }
 
-export const initialState: State = {ui:{fileType: 'pdf', uploader:true, preview:false, backdrop:false}, files:[]};
+export const initialState: State = {ui:{fileType: 'pdf', uploader:true, preview:false, backdrop:false, uploadProgress:0}, files:[]};
 
 export const uploaderSlice = createSlice({
 
@@ -44,6 +45,10 @@ export const uploaderSlice = createSlice({
         },
         deleteAll: (state) => {
             return{ui:{...initialState.ui}, files:[]};
+        },
+        uploadProgress: (state, action) =>{
+            state.ui = {...state.ui, uploadProgress:action.payload}
+            return state
         },
         toggleUploader:(state) =>{
             state.ui.uploader = !state.ui.uploader;
@@ -87,7 +92,7 @@ export const uploaderSlice = createSlice({
                     status: 'ok',
                     openPage: false,
                 })
-                state.ui = {...state.ui, id:id, uploader:false, preview:true, backdrop:false, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other'}
+                state.ui = {...state.ui, id:id, uploader:false, preview:true, backdrop:false, fileType: action.payload.fileType === 'pdf' ? 'pdf' : 'other', uploadProgress:0}
                 return state
             })
             .addCase(handleSubmission.rejected, (state) => {
@@ -109,7 +114,7 @@ function fileExtension(filename: FileWithPath) {
 
 export const handleSubmission: any = createAsyncThunk(
     'uploader/handleSubmission',
-    async (selectedFile: FileWithPath[]) => {
+    async (selectedFile: FileWithPath[], {dispatch}) => {
         let ext = fileExtension(selectedFile[0])
         if (!ext) {
             throw new Error("File type is not supported");
@@ -117,8 +122,15 @@ export const handleSubmission: any = createAsyncThunk(
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
         const headers = { 'Authorization': 'Bearer public_12a1xxQCS3oNdGZacNSUy1igmHNE' };
-
-        const response = await axios.post('https://api.upload.io/v2/accounts/12a1xxQ/uploads/form_data', formData, { headers })
+        const config = {
+            onUploadProgress: function(progressEvent:any) {
+                let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
+                console.log(percentCompleted)
+                dispatch(uploadProgress(percentCompleted));
+            },
+            headers:headers
+        }
+        const response = await axios.post('https://api.upload.io/v2/accounts/12a1xxQ/uploads/form_data', formData, config)
             .then(response => {
                 console.log('Success:', response.data.files[0].fileUrl);
                 return [response.data.files[0], selectedFile, ext];
@@ -130,7 +142,7 @@ export const handleSubmission: any = createAsyncThunk(
     })
 
 
-export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, uploadState, setFileType} = uploaderSlice.actions;
+export const {addFile, deleteAll, toggleUploader, showEntry, showPage, closePage, togglePreview, uploadState, setFileType, uploadProgress} = uploaderSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const uploaderState = (state: RootState) => state.uploader;
