@@ -121,7 +121,7 @@ export const handleSubmission: any = createAsyncThunk(
         }
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
-        const headers = { 'Authorization': 'Bearer public_12a1xxQCS3oNdGZacNSUy1igmHNE' };
+        const headers = { 'Authorization': 'Bearer public_FW25b5LEKMHh69RHufwmzuANiaxe' };
         const config = {
             onUploadProgress: function(progressEvent:any) {
                 let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
@@ -130,7 +130,7 @@ export const handleSubmission: any = createAsyncThunk(
             },
             headers:headers
         }
-        const response = await axios.post('https://api.upload.io/v2/accounts/12a1xxQ/uploads/form_data', formData, config)
+        const response = await axios.post('https://api.upload.io/v2/accounts/FW25b5L/uploads/form_data', formData, config)
             .then(response => {
                 console.log('Success:', response.data.files[0].fileUrl);
                 return [response.data.files[0], selectedFile, ext];
