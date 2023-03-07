@@ -121,7 +121,7 @@ export const handleSubmission: any = createAsyncThunk(
         }
         const formData = new FormData();
         formData.append('File', selectedFile[0]);
-        const headers = { 'Authorization': 'Bearer public_FW25b5LEKMHh69RHufwmzuANiaxe' };
+        const headers = { 'Authorization': 'Bearer public_kW15b6t9qbg1LUSoeFfo6Fo854dz' };
         const config = {
             onUploadProgress: function(progressEvent:any) {
                 let percentCompleted = Math.round( (progressEvent.loaded * 100) / progressEvent.total );
